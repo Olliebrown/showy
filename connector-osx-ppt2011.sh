@@ -1,6 +1,6 @@
 #!/bin/sh
 ##
-##  slideshow -- Observe and Control Slideshow Applications
+##  showy -- Observe and Control Slideshow Applications
 ##  Copyright (c) 2014-2019 Dr. Ralf S. Engelschall <http://engelschall.com>
 ##
 ##  This Source Code Form is subject to the terms of the Mozilla Public
@@ -43,7 +43,6 @@ while true; do
     fi
     command=`echo "$request" | sed -e 's;^.*command": *"\([^"]*\)".*$;\1;'`
 
-    #   let AppleScript produce the response
-    osascript "$basedir/connector-osx-ppt2011.scpt" $command
+    #   let JavaScript for Applications produce the response
+    osascript -l JavaScript "$basedir/connector-osx-ppt2011.js" $command
 done
-

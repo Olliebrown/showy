@@ -1,42 +1,44 @@
 {
-    "name":        "slideshow",
-    "homepage":    "http://github.com/rse/slideshow",
-    "description": "Observe and Control Slideshow Applications",
-    "version":     "1.0.3",
-    "license":     "MPL",
-    "author": {
-        "name":    "Dr. Ralf S. Engelschall",
-        "email":   "rse@engelschall.com",
-        "url":     "http://engelschall.com"
-    },
+    "name": "showy",
+    "homepage": "http://github.com/rse/showy",
+    "description": "Observe and Control Slideshow Applications (fork of 'slideshow')",
+    "version": "1.0.3",
+    "license": "MPL",
+    "author": "Seth Berrier",
     "keywords": [
-        "slide", "slideshow", "presentation",
-        "powerpoint", "keynote", "applescript", "wsh", "jscript"
+        "slide",
+        "slideshow",
+        "presentation",
+        "powerpoint",
+        "keynote",
+        "applescript",
+        "wsh",
+        "jscript"
     ],
     "repository": {
         "type": "git",
-        "url":  "git://github.com/rse/slideshow.git"
+        "url": "git://github.com/Olliebrown/showy.git"
     },
     "bugs": {
-        "url":  "http://github.com/rse/slideshow"
+        "url": "http://github.com/Olliebrown/showy"
     },
-    "main": "./slideshow-api.js",
+    "main": "./showy-api.js",
     "bin": {
-        "slideshow": "./slideshow-cli.js"
+        "showy": "./showy-cli.js"
     },
     "devDependencies": {
-        "grunt":                "1.0.4",
-        "grunt-cli":            "1.3.2",
+        "grunt": "1.0.4",
+        "grunt-cli": "1.3.2",
         "grunt-contrib-jshint": "2.1.0",
-        "grunt-contrib-clean":  "2.0.0",
-        "grunt-eslint":         "21.1.0"
+        "grunt-contrib-clean": "2.0.0",
+        "grunt-eslint": "21.1.0"
     },
-    "dependencies" : {
-        "event-stream":         "4.0.1",
-        "bluebird":             "3.5.5",
-        "chalk":                "2.4.2"
+    "dependencies": {
+        "event-stream": "4.0.1",
+        "bluebird": "3.5.5",
+        "chalk": "2.4.2"
     },
     "engines": {
-        "node":                 ">=8.0.0"
+        "node": ">=8.0.0"
     }
 }

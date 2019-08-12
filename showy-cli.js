@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /*
-**  slideshow -- Observe and Control Slideshow Applications
+**  showy -- Observe and Control Slideshow Applications
 **  Copyright (c) 2014-2019 Dr. Ralf S. Engelschall <http://engelschall.com>
 **
 **  This Source Code Form is subject to the terms of the Mozilla Public
 **  License (MPL), version 2.0. If a copy of the MPL was not distributed
 **  with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 **
-**  File:     slideshow-cli.js
+**  File:     showy-cli.js
 **  Purpose:  Command Line Interface (CLI)
 **  Language: Node/JavaScript
 */
@@ -19,7 +19,7 @@
 /*  external requirements  */
 var readline  = require("readline");
 var chalk     = require("chalk");
-var slideshow = require("./slideshow-api");
+var showy = require("./showy-api");
 
 /*  define the known applications  */
 var apps = {
@@ -41,6 +41,7 @@ var commands = {
     /*  API-derived  */
     "stat":   [],
     "info":   [],
+    "thumbs": [ "destination-folder" ],
     "boot":   [],
     "quit":   [],
     "open":   [ "presentation-filename" ],
@@ -68,7 +69,7 @@ var cliInteractive = function () {
     });
 
     /*  provide CLI  */
-    rl.setPrompt("slideshow> ");
+    rl.setPrompt("showy> ");
     rl.prompt();
     rl.on("line", function (line) {
         /*  determine command  */
@@ -93,8 +94,8 @@ var cliInteractive = function () {
                 else {
                     if (ss !== null)
                         ss.end();
-                    ss = new slideshow(argv[1]);
-                    rl.setPrompt("slideshow(" + argv[1] + ")> ");
+                    ss = new showy(argv[1]);
+                    rl.setPrompt("showy(" + argv[1] + ")> ");
                 }
             }
 
@@ -132,7 +133,7 @@ var cliBatch = function (argv) {
     if (argv.length === 1 && argv[0] === "help") {
         Object.keys(commands).forEach(function (cmd) {
             if (cmd !== "use" && cmd !== "help") {
-                console.log(chalk.green("slideshow <application> " + cmd + " " + (
+                console.log(chalk.green("showy <application> " + cmd + " " + (
                     commands[cmd].map(function (arg) { return "<" + arg + ">"; }).join(" ")
                 )));
             }
@@ -147,7 +148,7 @@ var cliBatch = function (argv) {
         console.log(chalk.red("ERROR: invalid application (expected: " + Object.keys(apps).join(", ") + ")"));
         process.exit(1);
     }
-    var ss = new slideshow(argv[0]);
+    var ss = new showy(argv[0]);
     var info = commands[argv[1]];
     if (typeof info === "undefined") {
         console.log(chalk.red("ERROR: invalid connector command (use \"help\" for usage)"));
@@ -171,4 +172,3 @@ if (process.argv.length === 2)
     cliInteractive();
 else
     cliBatch(process.argv.splice(2));
-

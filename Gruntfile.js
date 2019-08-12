@@ -1,5 +1,5 @@
 /*
-**  slideshow -- Observe and Control Slideshow Applications
+**  showy -- Observe and Control Slideshow Applications
 **  Copyright (c) 2014-2019 Dr. Ralf S. Engelschall <http://engelschall.com>
 **
 **  This Source Code Form is subject to the terms of the Mozilla Public
@@ -16,13 +16,13 @@ module.exports = function (grunt) {
                 jshintrc: "jshint.json"
             },
             gruntfile:   [ "Gruntfile.js" ],
-            sourcefiles: [ "slideshow-*.js" ]
+            sourcefiles: [ "showy-*.js" ]
         },
         eslint: {
             options: {
                 configFile: "eslint.json"
             },
-            target: [ "slideshow-*.js" ]
+            target: [ "showy-*.js" ]
         },
         clean: {
             clean:     [ ],
@@ -36,4 +36,3 @@ module.exports = function (grunt) {
 
     grunt.registerTask("default", [ "jshint", "eslint" ]);
 };
-

@@ -1,5 +1,5 @@
 --
---  slideshow -- Observe and Control Slideshow Applications
+--  showy -- Observe and Control Slideshow Applications
 --  Copyright (c) 2014-2019 Dr. Ralf S. Engelschall <http://engelschall.com>
 --
 --  This Source Code Form is subject to the terms of the Mozilla Public
@@ -83,6 +83,24 @@ on pptGetCurSlide()
     end try
 end pptGetCurSlide
 
+--  get steps in current slide
+on pptGetCurSlideSteps()
+    try
+        tell application "Microsoft PowerPoint"
+            if slide state of slide show view of slide show window of active presentation is slide show state running then
+                --  currently in running slide show mode (for production)
+                set slideSteps to (print steps of slide of slide show view of slide show window of active presentation)
+            else
+                --  currently in editing mode (for testing)
+                set slideSteps to (print steps of slide range of selection of document window 1)
+            end if
+            return slideSteps
+        end tell
+    on error errMsg
+        return 0
+    end try
+end pptGetCurSlideSteps
+
 --  get maximum slide
 on pptGetMaxSlide()
     try
@@ -101,16 +119,34 @@ on cmdSTATE()
     if state is "closed" then
         set position to 0
         set slides to 0
+        set steps to 0
     else
         set position to pptGetCurSlide()
         set slides to pptGetMaxSlide()
+        set steps to pptGetCurSlideSteps()
     end if
     return ("{ \"response\": { " & ¬
         "\"state\": \"" & state & "\", " & ¬
         "\"position\": " & position & ", " & ¬
-        "\"slides\": " & slides & " " & ¬
+        "\"slides\": " & slides & ", " & ¬
+        "\"steps\": " & steps & " " & ¬
     "} }")
 end cmdSTATE
+
+--  the THUMBS command
+on cmdTHUMBS(destPosixPath)
+    -- Check that there is an active presentation first
+    if pptGetMaxSlide() is 0 then
+        error "still no active presentation"
+    end if
+
+    -- Run the VB Macro that will output jpg thumbnails
+    tell application "Microsoft PowerPoint"
+		  run VB macro macro name "SaveAsImages" list of parameters { destPosixPath }
+    end tell
+
+    return "{ \"response\": \"OK\" }"
+end cmdTHUMBS
 
 --  the INFO command
 on cmdINFO()
@@ -214,11 +250,11 @@ on cmdCTRL(command, arg)
         end if
         tell application "Microsoft PowerPoint"
             set slideShowSettings to slide show settings of active presentation
-            set slideShowSettings's starting slide to 1
-            set slideShowSettings's ending slide to 1
-            set slideShowSettings's range type to slide show range
-            set slideShowSettings's show type to slide show type speaker
-            set slideShowSettings's advance mode to slide show advance manual advance
+            -- set slideShowSettings's starting slide to 1
+            -- set slideShowSettings's ending slide to 1
+            -- set slideShowSettings's range type to slide show range
+            set slideShowSettings's show type to slide show type presenter
+            -- set slideShowSettings's advance mode to slide show advance manual advance
             run slide show slideShowSettings -- BUGGY: starts blank
         end tell
     else if command is "STOP" then
@@ -295,6 +331,8 @@ on run argv
             set output to cmdSTATE()
         else if cmd is "INFO" then
             set output to cmdINFO()
+        else if cmd is "THUMBS" then
+            set output to cmdTHUMBS(arg)
         else if cmd is "BOOT" ¬
             or cmd is "QUIT" ¬
             or cmd is "OPEN" ¬
@@ -313,8 +351,13 @@ on run argv
             set output to "{ \"error\": \"invalid command\" }"
         end if
     on error errMsg
-        set output to ("{ \"error\": \"" & errMsg & "\" }")
+        set astid to AppleScript's text item delimiters
+        set AppleScript's text item delimiters to quote
+        set errMsg to text items of errMsg
+        set AppleScript's text item delimiters to "'"
+        set errMsg to errMsg as text
+        set AppleScript's text item delimiters to astid        
+        set output to "{ \"error\": \"" & errMsg & "\" }"
     end try
     copy output to stdout
 end run
-
