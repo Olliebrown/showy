@@ -13,6 +13,14 @@
  * --
  **/
 
+// Turn console.log into something reasonable
+console.log = function() {
+  ObjC.import('Foundation');
+  for (argument of arguments) {
+    $.NSFileHandle.fileHandleWithStandardOutput.writeData($.NSString.alloc.initWithString(String(argument) + "\n").dataUsingEncoding($.NSNEXTSTEPStringEncoding));
+  }
+}
+
 // Different states for PowerPoint, returned by pptGetState()
 PPT_STATE = {
   CLOSED: 'closed',
@@ -175,14 +183,17 @@ function cmdSTATE() {
   // If not running or no active presentation
   state = pptGetState()
   if (state === PPT_STATE.CLOSED || state === PPT_STATE.RUNNING) {
-    return { position: 0, slides: 0, steps: 0 }
+    return { response: { state: state, position: 0, slides: 0, steps: 0 } }
   }
 
   // Otherwise, build and return state object
   return {
-    position: pptGetCurSlide(),
-    slides: pptGetMaxSlide(),
-    steps: pptGetCurSlideSteps()
+  	response: {
+      state: state,
+      position: pptGetCurSlide(),
+      slides: pptGetMaxSlide(),
+      steps: pptGetCurSlideSteps()
+    }
   }
 }
 
@@ -203,7 +214,7 @@ function cmdTHUMBS(path) {
   let proc = Application('System Events').processes.byName('Microsoft PowerPoint')
 
   if (proc.windows.sheets.length > 0) {
-	proc.windows.sheets[0].buttons.byName('Cancel').click()
+	  proc.windows.sheets[0].buttons.byName('Cancel').click()
   }
 
   let fileMenu = proc.menuBars[0].menuBarItems.byName('File')
@@ -306,7 +317,7 @@ function cmdCTRL(command, arg) {
       if (state === PPT_STATE.EDITING || state === PPT_STATE.VIEWING) {
         throw new Error('Presentation already loaded')
       }
-      Application('Microsoft PowerPoint').open(Path(arg))
+      Application('Finder').open(arg, { using: Path('/Applications/Microsoft PowerPoint.app')})
       break
 	
     case 'CLOSE':
@@ -351,7 +362,7 @@ function cmdCTRL(command, arg) {
     case 'FIRST':
       if (state === PPT_STATE.EDITING) {
         _getActiveDocument().view.goToSlide({ number: 1 })
-      } else if (state === PPT_STATE_VIEWING)  {
+      } else if (state === PPT_STATE.VIEWING)  {
         _getActiveSlideShowView().goToFirstSlide()
       } else {
         throw new Error('No loaded presentation')
@@ -361,7 +372,7 @@ function cmdCTRL(command, arg) {
     case 'LAST':
       if (state === PPT_STATE.EDITING) {
         _getActiveDocument().view.goToSlide({ number: pptGetMaxSlide() })
-      } else if (state === PPT_STATE_VIEWING) {
+      } else if (state === PPT_STATE.VIEWING) {
         _getActiveSlideShowView().goToLastSlide()
       } else {
         throw new Error('No loaded presentation')
@@ -371,7 +382,7 @@ function cmdCTRL(command, arg) {
     case 'GOTO':
       if (state === PPT_STATE.EDITING) {
         _getActiveDocument().view.goToSlide({ number: arg })
-      } else if (state === PPT_STATE_VIEWING)  {
+      } else if (state === PPT_STATE.VIEWING)  {
         _jumpToSlide(parseInt(arg))
       } else {
         throw new Error('No loaded presentation')
@@ -381,7 +392,7 @@ function cmdCTRL(command, arg) {
     case 'PREV':
       if (state === PPT_STATE.EDITING) {
         _getActiveDocument().view.goToSlide({ number: pptGetCurSlide() - 1 })
-      } else if (state === PPT_STATE_VIEWING)  {
+      } else if (state === PPT_STATE.VIEWING)  {
         _getActiveSlideShowView().goToPreviousSlide()
       } else {
         throw new Error('No loaded presentation')
@@ -391,7 +402,7 @@ function cmdCTRL(command, arg) {
     case 'NEXT':
       if (state === PPT_STATE.EDITING) {
         _getActiveDocument().view.goToSlide({ number: pptGetCurSlide() + 1 })
-      } else if (state === PPT_STATE_VIEWING) {
+      } else if (state === PPT_STATE.VIEWING) {
         _getActiveSlideShowView().goToNextSlide()
       } else {
         throw new Error('No loaded presentation')
@@ -410,7 +421,7 @@ function cmdCTRL(command, arg) {
 function run(argv) {
   // Pargse command arguments
   if (argv.length < 1) {
-    console.log('No command specified')
+    console.log(JSON.stringify({ error: 'No command specified' }))
     return
   }
   let cmd = argv[0]

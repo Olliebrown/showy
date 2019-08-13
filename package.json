@@ -2,7 +2,7 @@
     "name": "showyslides",
     "homepage": "http://github.com/rse/showy",
     "description": "Observe and Control Slideshow Applications (fork of 'slideshow')",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "MPL",
     "author": "Seth Berrier",
     "keywords": [

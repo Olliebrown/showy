@@ -44,5 +44,5 @@ while true; do
     command=`echo "$request" | sed -e 's;^.*command": *"\([^"]*\)".*$;\1;'`
 
     #   let JavaScript for Applications produce the response
-    osascript -l JavaScript "$basedir/connector-osx-ppt201X.js" $command
+    osascript -l JavaScript "$basedir/connector-osx-ppt201X.js" $command 2>&1
 done
