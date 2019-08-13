@@ -1,4 +1,4 @@
-Showy
+Showyslides
 =========
 
 Observe and Control Slideshow Applications
