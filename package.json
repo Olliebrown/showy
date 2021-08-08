@@ -15,6 +15,11 @@
         "wsh",
         "jscript"
     ],
+    "scripts": {
+        "build": "grunt",
+        "clean": "grunt clean:clean",
+        "distclean": "grunt clean:clean clean:distclean"
+    },
     "repository": {
         "type": "git",
         "url": "git://github.com/Olliebrown/showy.git"
@@ -27,16 +32,17 @@
         "showy": "./showy-cli.js"
     },
     "devDependencies": {
-        "grunt": "1.0.4",
-        "grunt-cli": "1.3.2",
-        "grunt-contrib-jshint": "2.1.0",
-        "grunt-contrib-clean":  "2.0.0",
-        "grunt-eslint":         "22.0.0"
+        "grunt": "1.4.1",
+        "grunt-cli": "1.4.3",
+        "grunt-contrib-clean": "2.0.0",
+        "grunt-contrib-jshint": "3.0.0",
+        "grunt-eslint": "23.0.0"
     },
-    "dependencies" : {
-        "event-stream":         "4.0.1",
-        "bluebird":             "3.7.2",
-        "chalk":                "3.0.0"
+    "dependencies": {
+        "bluebird": "3.7.2",
+        "chalk": "4.1.2",
+        "event-stream": "4.0.1",
+        "npm-check-updates": "^11.8.3"
     },
     "engines": {
         "node": ">=8.0.0"

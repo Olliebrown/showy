@@ -18,12 +18,6 @@ module.exports = function (grunt) {
             gruntfile:   [ "Gruntfile.js" ],
             sourcefiles: [ "showy-*.js" ]
         },
-        eslint: {
-            options: {
-                configFile: "eslint.json"
-            },
-            target: [ "showy-*.js" ]
-        },
         clean: {
             clean:     [ ],
             distclean: [ "node_modules" ]
@@ -32,7 +26,6 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-eslint");
 
-    grunt.registerTask("default", [ "jshint", "eslint" ]);
+    grunt.registerTask("default", [ "jshint" ]);
 };
