@@ -25,7 +25,7 @@ var connectors = {
     "darwin-keynote6":       "connector-osx-kn6.sh",
     "darwin-powerpoint":     "connector-osx-ppt2011.sh",
     "darwin-powerpoint2011": "connector-osx-ppt2011.sh",
-    "darwin-powerpoint2016": "connector-osx-ppt201X.sh",
+    "darwin-powerpoint2016": "connector-osx-ppt2011.sh",
     "win32-powerpoint":      "connector-win-ppt2010.bat",
     "win32-powerpoint2010":  "connector-win-ppt2010.bat",
     "win32-powerpoint2013":  "connector-win-ppt2010.bat"
@@ -50,7 +50,7 @@ var connector = function (application) {
     this.c.stdin.setEncoding("utf8");
     this.c.stdout.setEncoding("utf8");
 
-    /*  create line-based duplex stream out of stdin/stdout piples  */
+    /*  create line-based duplex stream out of stdin/stdout pipes  */
     this.io = es.duplex(
         this.c.stdin,
         this.c.stdout.pipe(es.split(/\r?\n/))

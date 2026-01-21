@@ -121,9 +121,9 @@ function _getPresenterView() {
 }
 
 function _jumpToSlide(num) {
-  let pViewWin = _getPresenterView()
-  let thumbnailList = pViewWin.scrollAreas[0].lists[0]  
-  thumbnailList.uiElements[num - 1].click()
+  // let pViewWin = _getPresenterView()
+  // let thumbnailList = pViewWin.scrollAreas[0].lists[0]
+  // thumbnailList.uiElements[num - 1].click()
 }
 
 /******* public helper functions **********/
@@ -281,7 +281,14 @@ function cmdINFO() {
     
     // Clean newline characters
     slideNote = slideNote.replace(/\r/g, '\n')
-    
+
+    // Fix up some dangerous characters
+    slideNote = slideNote.replaceAll('’', '\'')
+    slideNote = slideNote.replaceAll('‘', '\'')
+    slideNote = slideNote.replaceAll('”', '"')
+    slideNote = slideNote.replaceAll('“', '"')
+    slideNote = slideNote.replaceAll('/', '_')
+
     // Add the title to the list
     theNotes.push(slideNote)
   }
@@ -381,7 +388,7 @@ function cmdCTRL(command, arg) {
 
     case 'GOTO':
       if (state === PPT_STATE.EDITING) {
-        _getActiveDocument().view.goToSlide({ number: arg })
+        _getActiveDocument().view.goToSlide({ number: parseInt(arg) })
       } else if (state === PPT_STATE.VIEWING)  {
         _jumpToSlide(parseInt(arg))
       } else {
@@ -416,10 +423,16 @@ function cmdCTRL(command, arg) {
   return { response: 'ok' }
 }
 
+/******* alternative for testing **********/
+// function run () {
+//   let result = cmdCTRL('GOTO', '10')
+//   console.log(JSON.stringify(result, null, 2))
+// }
+
 /******* script entry point **********/
 // main procedure
 function run(argv) {
-  // Pargse command arguments
+  // Parse command arguments
   if (argv.length < 1) {
     console.log(JSON.stringify({ error: 'No command specified' }))
     return
@@ -436,7 +449,7 @@ function run(argv) {
     switch(cmd) {
       case 'STAT': output = cmdSTATE(); break
       case 'INFO': output = cmdINFO(); break
-      case 'THUMBS': output = cmdTHUMBS(arg); break
+      // case 'THUMBS': output = cmdTHUMBS(arg); break
 
       case 'BOOT': case 'QUIT': case 'OPEN':
       case 'CLOSE': case 'START': case 'STOP':
